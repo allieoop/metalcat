@@ -1,6 +1,6 @@
 # MetalCat
 
-    metalcat - python app that overlays heavy metal lyrics onto cat photos, which can easily be deployed to Heroku
+metalcat - python app that overlays heavy metal lyrics onto cat photos
 
 ## Running Locally
 
@@ -12,10 +12,9 @@ $ cd metalcat
 
 $ pip install -r requirements.txt
 
+$ scrapy crawl metrolyrics_spider -o output/lyrics.json
 $ heroku local
 ```
-
-MetalCat should now be running on [localhost:5000](http://localhost:5000/).
 
 ## Deploying to Heroku
 
@@ -23,6 +22,10 @@ MetalCat should now be running on [localhost:5000](http://localhost:5000/).
 $ heroku create
 $ git push heroku master
 
-$ heroku run scrapy crawl metrolyrics_spider
+$ heroku run scrapy crawl metrolyrics_spider -o output/lyrics.json
 $ heroku open
 ```
+
+## Example
+
+https://metalcat.herokuapp.com/

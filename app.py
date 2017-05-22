@@ -19,17 +19,17 @@ def main():
     return render_template('index.html')
 
 def overlayLyricsOnCatPhoto():
-    with open('lyrics.json') as json_data:
+    with open('output/lyrics.json') as json_data:
         verses = json.load(json_data)
         first_line = verses[0]['lines'][0]
         second_line = verses[0]['lines'][1]
 
-    img = Image.open("cat.png")
+    img = Image.open("static/cat.png")
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype('Impact.ttf', 60)
+    font = ImageFont.truetype('static/Impact.ttf', 60)
     draw.text((25, 50), first_line, (200,40,40), font=font)
     draw.text((75, 100), second_line, (200,40,40), font=font)
-    img.save('static/metalcat.jpg')
+    img.save('output/metalcat.jpg')
 
 if __name__ == "__main__":
     app.run()
