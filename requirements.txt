@@ -1,0 +1,5 @@
+Flask==0.12.2
+Werkzeug==0.12.2
+Gunicorn==19.7.1
+Scrapy==1.4.0
+Pillow==4.1.1
