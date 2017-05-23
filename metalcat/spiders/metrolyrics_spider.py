@@ -9,8 +9,8 @@ class MetrolyricsSpider(Spider):
     allowed_domains = ["metrolyrics.com"]
 
     def start_requests(self):
-        song = getattr(self, 'song', 'cat-scratch-fever')
-        artist = getattr(self, 'artist', 'ted-nugent')
+        song = getattr(self, 'song', 'dopesmoker')
+        artist = getattr(self, 'artist', 'sleep')
         url = 'http://www.metrolyrics.com/'+song+'-lyrics-'+artist+'.html'
         yield Request(url, self.parse)
 

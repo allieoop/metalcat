@@ -1,3 +1,4 @@
+import argparse
 import os
 import datetime
 import json
@@ -33,7 +34,10 @@ def getOverlayText():
                     break
     return overlay_text
 
-def crawl():
+def crawl(song, artist):
+    if os.path.isfile('output/lyrics.json'):
+        os.remove('output/lyrics.json')
+
     process = CrawlerProcess({
         'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
         'FEED_FORMAT': 'json',
@@ -41,11 +45,26 @@ def crawl():
         'FEED_EXPORT_ENCODING':'utf-8'
     })
 
-    process.crawl(MetrolyricsSpider)
+    process.crawl(MetrolyricsSpider, song=song, artist=artist)
     process.start()
 
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s',
+                        '--song',
+                        help='The name of a song, with dashes instead of spaces',
+                        default='dopesmoker',
+                        required=False)
+    parser.add_argument('-a',
+                        '--artist',
+                        help='The name of an artist, with dashes instead of spaces',
+                        default='sleep',
+                        required=False)
+    args = parser.parse_args()
+
+    crawl(args.song, args.artist)
+    overlayLyricsOnCatImage()
+
 if __name__ == "__main__":
-    if not os.path.isfile('output/lyrics.json'):
-        crawl()
-    metalcat()
+    main()
 
