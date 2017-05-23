@@ -1,4 +1,5 @@
 import os
+import datetime
 import json
 import scrapy
 from scrapy.crawler import CrawlerProcess
@@ -25,7 +26,8 @@ def overlayLyricsOnCatImage():
     font = ImageFont.truetype('static/Impact.ttf', 60)
     draw.text((50, 50), overlay_text[0], (200,40,40), font=font)
     draw.text((80, 100), overlay_text[1], (200,40,40), font=font)
-    img.save('output/metalcat.jpg')
+    date_string = datetime.datetime.now().strftime('-%d%H%M%S')
+    img.save('output/metalcat'+date_string+'.jpg')
 
 def getOverlayText():
     overlay_text = ['=^..^=', '']
