@@ -1,5 +1,6 @@
 Flask==0.12.2
-Werkzeug==0.12.2
-Scrapy==1.4.0
+Gunicorn==19.7.1
 Pillow==4.1.1
 Requests==2.14.2
+Scrapy==1.4.0
+Werkzeug==0.12.2

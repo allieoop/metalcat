@@ -1,4 +1,28 @@
 <html>
-  <head></head>
-  <body><img src="/static/example/metalcat.jpg" width="50%" /></body>
+  <head>
+    <title>{{ title }}</title>
+    <style>
+      .button-container form,
+      .button-container form div {
+        display: inline;
+      }
+      .button-container button {
+        display: inline;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="button-container">
+      <form id="make_it_metal" action="/" method="get">
+        Cat image URL: <input id="url" type="text" name="url" value="" />
+        <button type="submit" onclick="validateUrl();">Make it metal</button>
+      </form>
+      or...
+      <form id="make_it_metal" action="/" method="get">
+        <button type="submit" onclick="validateUrl();">Random</button>
+      </form>
+    </div>
+  	<img src={{ img_src }} height="80%" />
+  </body>
 </html>

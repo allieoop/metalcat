@@ -1,12 +1,17 @@
-from scrapy.spiders import Spider
-from scrapy.selector import HtmlXPathSelector
+import logging
+
 from scrapy import Request
+from scrapy.selector import HtmlXPathSelector
+from scrapy.spiders import Spider
 
 from metalcat.items import MetrolyricsItem
 
 class MetrolyricsSpider(Spider):
     name = "metrolyrics_spider"
     allowed_domains = ["metrolyrics.com"]
+
+    logging.getLogger('scrapy').setLevel(logging.WARNING)
+    logging.getLogger('scrapy').propagate = False
 
     def start_requests(self):
         song = getattr(self, 'song', 'dopesmoker')

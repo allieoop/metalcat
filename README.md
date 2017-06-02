@@ -1,18 +1,18 @@
 # MetalCat
-```
+
 metalcat - python app that'll overlay lyrics from metrolyrics onto cat photos
+
+## Usage
+```sh
+$ python metalcat.py --help
 
      /\ /\    
     > ^ ^ <
   \m/  `  \m/
     \ / \ /
-     (___)_____
-```
+     (___)______
 
-## Usage
-```sh
-$ python3 test.py --help
-usage: test.py [-h] [-s SONG] [-a ARTIST] [-i IMAGE] [-u URL]
+usage: metalcat.py [-h] [-s SONG] [-a ARTIST] [-i IMAGE] [-u URL]
 
 optional arguments:
   -h, --help                  show this help message and exit
@@ -30,9 +30,7 @@ $ cd metalcat
 
 $ pip install -r requirements.txt
 
-$ python test.py
-
-$ python test.py --song dopesmoker --artist sleep
+$ python metalcat.py --song dopesmoker --artist sleep
 ```
 
 ## Running Locally with Heroku
@@ -47,7 +45,7 @@ $ scrapy crawl metrolyrics_spider -a song=dopesmoker -a artist=sleep -o output/l
 $ heroku local
 ```
 
-Check the output folder in the project directory for your metalcat image :metal:
+View your metalcat image on http://localhost:5000 :metal:
 
 ## Deploying to Heroku
 
