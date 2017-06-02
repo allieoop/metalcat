@@ -15,11 +15,26 @@ def overlayLyricsOnCatImage():
     overlay_text = getOverlayText();
     img = Image.open('static/cat.png')
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype('static/Impact.ttf', 60)
-    draw.text((50, 50), overlay_text[0], (200,40,40), font=font)
-    draw.text((80, 100), overlay_text[1], (200,40,40), font=font)
+    width, height = img.size
+    text_color = (200,40,40)
+    font = getFittedFont(width, overlay_text[0])
+    draw.text((50, 50), overlay_text[0], text_color, font=font)
+    font = getFittedFont(width, overlay_text[1])
+    draw.text((80, 100), overlay_text[1], text_color, font=font)
     date_string = datetime.datetime.now().strftime('-%d%H%M%S')
     img.save('output/metalcat'+date_string+'.jpg')
+
+def getFittedFont(image_width, overlay_text):
+    fontsize = 1
+    image_fraction = 0.90 # portion of the image width that the text will cover
+    # iterate until the text size is just larger than the criteria
+    font = ImageFont.truetype("static/Impact.ttf", fontsize)
+    while font.getsize(overlay_text)[0] < image_fraction*image_width:
+        fontsize += 1
+        font = ImageFont.truetype("static/Impact.ttf", fontsize)
+    # Decrement to be sure it is less than criteria
+    fontsize -= 1
+    return ImageFont.truetype("static/Impact.ttf", fontsize)
 
 def getOverlayText():
     overlay_text = ['=^..^=', '']
@@ -28,10 +43,9 @@ def getOverlayText():
         for verse in verses:
             lines = verse['lines']
             if len(lines) >= 2:
-                if (len(lines[0]) < 47 and len(lines[1]) < 47):
-                    overlay_text[0] = lines[0]
-                    overlay_text[1] = lines[1]
-                    break
+                overlay_text[0] = lines[0]
+                overlay_text[1] = lines[1]
+                break
     return overlay_text
 
 def crawl(song, artist):
