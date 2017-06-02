@@ -2,7 +2,8 @@ import argparse
 import os
 import datetime
 import json
-import scrapy
+import requests
+from io import BytesIO
 from scrapy.crawler import CrawlerProcess
 from PIL import Image
 from PIL import ImageFont
@@ -11,9 +12,9 @@ from PIL import ImageDraw
 import metalcat
 from metalcat.spiders.metrolyrics_spider import MetrolyricsSpider
 
-def overlayLyricsOnCatImage():
+def overlayLyricsOnCatImage(image_path):
     overlay_text = getOverlayText();
-    img = Image.open('static/cat.png')
+    img = Image.open(image_path)
     draw = ImageDraw.Draw(img)
     width, height = img.size
     text_color = (200,40,40)
@@ -74,10 +75,25 @@ def main():
                         help='The name of an artist, with dashes instead of spaces',
                         default='sleep',
                         required=False)
+    parser.add_argument('-i',
+                        '--image',
+                        help='The path of the image file',
+                        default='static/cat.png',
+                        required=False)
+    parser.add_argument('-u',
+                        '--url',
+                        help='The url of the image file',
+                        default='',
+                        required=False)
     args = parser.parse_args()
 
     crawl(args.song, args.artist)
-    overlayLyricsOnCatImage()
+
+    if args.url:
+        response = requests.get(args.url)
+        overlayLyricsOnCatImage(BytesIO(args.url.content))
+    else:
+        overlayLyricsOnCatImage(args.image)
 
 if __name__ == "__main__":
     main()

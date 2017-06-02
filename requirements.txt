@@ -2,3 +2,4 @@ Flask==0.12.2
 Werkzeug==0.12.2
 Scrapy==1.4.0
 Pillow==4.1.1
+Requests==2.14.2
