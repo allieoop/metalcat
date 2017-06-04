@@ -11,6 +11,8 @@ app.config.update(DEBUG = True)
 
 @app.route("/", methods=['GET'])
 def main():
+    song = selectImage(request.args.get('song'))
+    artist = selectImage(request.args.get('artist'))
     image = selectImage(request.args.get('url'))
     image_with_lyrics = overlayLyrics(image)
     return render_template(
