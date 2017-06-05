@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import random
+import shutil
 from io import BytesIO
 
 import requests
@@ -11,39 +12,61 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
-def selectImage(image_url, image_file_path=""):
-    image_directory = 'static/normalcats/'
-    image = image_directory + 'default_cat.png'
-    random_image = selectRandomImage(image_directory)
+SCRAPED_ITEMS_FILE = 'output/lyrics.json'
+NORMAL_CAT_DIR = 'static/normalcats/'
+NORMAL_CATS_FILE = 'static/normalcats.json'
+METAL_CAT_ARCHIVE = 'static/metalcats/archive/'
+DEFAULT_IMAGE_URL = 'http://i.imgur.com/aeweLdr.jpg'
+
+def get_image(image_url="", image_file_path=""):
     if image_url:
         response = requests.get(image_url)
-        image = BytesIO(response.content)
-        # TODO: Do some error checking
+        return BytesIO(response.content)
     elif image_file_path:
-        image = image_file_path
-    elif random_image:
-        image = random_image
-    return image
+        return image_file_path
+    else:
+        response = requests.get(select_random_image_url())
+        return BytesIO(response.content)
 
-def selectRandomImage(image_directory):
-    accepted_file_extensions = ('.jpg', '.jpeg', '.png')
-    files = []
-    for extension in accepted_file_extensions:
-        files.extend(glob.glob(image_directory+'*'+extension))
-    image = random.choice(files)
-    return image
+def get_overlay_text(song, artist):
+    overlay_text = ['=^..^=', '']
+    lyrics = get_lyrics(song, artist)
+    verse = random.choice(lyrics)
+    if len(verse) >= 2:
+        first_line = random.choice(verse)
+        second_line_index = verse.index(first_line)+1
+        if second_line_index < len(verse):
+            overlay_text[0] = first_line
+            overlay_text[1] = verse[second_line_index]
+        else:
+            overlay_text[0] = verse[0]
+            overlay_text[1] = verse[1]
+    return overlay_text
 
-def overlayLyrics(image_path):
-    overlay_text = getOverlayText();
+def delete_images(images_dir):
+    for the_file in os.listdir(images_dir):
+        file_path = os.path.join(images_dir, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            print(e)
+
+def archive_image(image_path):
+    archive_path = os.path.join(METAL_CAT_ARCHIVE, os.path.basename(image_path))
+    shutil.move(image_path, archive_path)
+    return archive_path
+
+def draw_text_on_image(image_path, overlay_text):
     img = Image.open(image_path)
     draw = ImageDraw.Draw(img)
     width, height = img.size
     text_color = (200,40,40)
-    font = getFittedFont(width, overlay_text[0])
+    font = get_fitted_font(width, overlay_text[0])
     x0_1 = (int) (width * 0.02)
     y0_1 = (int) (font.getsize('A')[0] / 2)
     draw.text((x0_1, y0_1), overlay_text[0].strip(), text_color, font=font)
-    font = getFittedFont(width, overlay_text[1])
+    font = get_fitted_font(width, overlay_text[1])
     x0_2 = (int) (width * 0.04)
     y0_2 = (int) (height - font.getsize('A')[1] * 1.5)
     draw.text((x0_2, y0_2), overlay_text[1].strip(), text_color, font=font)
@@ -52,7 +75,24 @@ def overlayLyrics(image_path):
     img.save(image_name)
     return image_name
 
-def getFittedFont(image_width, overlay_text):
+def select_random_image_url():
+    with open(NORMAL_CATS_FILE) as json_file:
+        for line in json_file:
+            normal_cats_json = json.loads(line)
+            return random.choice(normal_cats_json['urls'])
+    return DEFAULT_IMAGE_URL
+
+def select_random_image():
+    return random.choice(get_cat_images(NORMAL_CAT_DIR))
+
+def get_cat_images(image_dir):
+    accepted_file_extensions = ('.jpg', '.jpeg', '.png')
+    files = []
+    for extension in accepted_file_extensions:
+        files.extend(glob.glob(image_dir+'*'+extension))
+    return files
+
+def get_fitted_font(image_width, overlay_text):
     fontsize = 1
     image_fraction = 0.90 # portion of the image width that the text will cover
     # iterate until the text size is just larger than the criteria
@@ -64,19 +104,10 @@ def getFittedFont(image_width, overlay_text):
     fontsize -= 1
     return ImageFont.truetype("static/Impact.ttf", fontsize)
 
-def getOverlayText():
-    overlay_text = ['=^..^=', '']
-    with open('output/lyrics.json') as json_data:
-        verses = json.load(json_data)
-        verse = random.choice(verses)
-        lines = verse['lines']
-        if len(lines) >= 2:
-            first_line = random.choice(lines)
-            second_line_index = lines.index(first_line)+1
-            if second_line_index < len(lines):
-                overlay_text[0] = first_line
-                overlay_text[1] = lines[second_line_index]
-            else:
-                overlay_text[0] = lines[0]
-                overlay_text[1] = lines[1]
-    return overlay_text
+def get_lyrics(song, artist):
+    with open(SCRAPED_ITEMS_FILE) as json_file:
+        for line in json_file:
+            item = json.loads(line)
+            if item['song'] == song and item['artist'] == artist:
+                return item['lyrics']
+    return []

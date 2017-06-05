@@ -1,26 +1,15 @@
 import argparse
-import json
 import logging
-import os
 
-from scrapy.crawler import CrawlerProcess
+from common.imagemaker import get_image, get_overlay_text, draw_text_on_image
+from metalcat.runner import run_spider
 
-from common.imagemaker import overlayLyrics, selectImage
-from metalcat.spiders.metrolyrics_spider import MetrolyricsSpider
+SCRAPED_ITEMS_FILE = 'output/lyrics.json'
+DEFAULT_SONG = 'dopesmoker'
+DEFAULT_ARTIST = 'sleep'
 
-def crawl(song, artist):
-    if os.path.isfile('output/lyrics.json'):
-        os.remove('output/lyrics.json')
-
-    process = CrawlerProcess({
-        'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
-        'FEED_FORMAT': 'json',
-        'FEED_URI': 'output/lyrics.json',
-        'FEED_EXPORT_ENCODING':'utf-8'
-    })
-
-    process.crawl(MetrolyricsSpider, song=song, artist=artist)
-    process.start()
+def crawl(song, artist): 
+    run_spider(song=song, artist=artist, feed_uri=SCRAPED_ITEMS_FILE)
 
 def main():
     cat_logo = """     
@@ -35,30 +24,27 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-s',
                         '--song',
-                        help='The name of a song, with dashes instead of spaces',
-                        default='dopesmoker',
+                        help='The name of the song to get lyrics from, with dashes instead of spaces',
+                        default=DEFAULT_SONG,
                         required=False)
     parser.add_argument('-a',
                         '--artist',
-                        help='The name of an artist, with dashes instead of spaces',
-                        default='sleep',
+                        help='The name of the artist to get lyrics from, with dashes instead of spaces',
+                        default=DEFAULT_ARTIST,
                         required=False)
     parser.add_argument('-i',
                         '--image',
-                        help='The image filepath',
-                        default='',
+                        help='The path to the image file to draw lyrics on',
                         required=False)
     parser.add_argument('-u',
                         '--url',
-                        help='The image url',
-                        default='',
+                        help='The url of the image to draw lyrics on',
                         required=False)
     args = parser.parse_args()
-
-    # TODO: Check if file exists if no song or artist is passed - don't crawl every time
     crawl(args.song, args.artist)
-    image = selectImage(args.url, args.image)
-    overlayLyrics(image)
+    image = get_image(args.url, args.image)
+    lyrics = get_overlay_text(args.song, args.artist)
+    image_with_lyrics = draw_text_on_image(image, lyrics)    
 
 if __name__ == "__main__":
     logging.getLogger('PIL').setLevel(logging.WARNING)

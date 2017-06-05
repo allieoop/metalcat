@@ -15,14 +15,30 @@
   <body>
     <div class="button-container">
       <form id="make_it_metal" action="/" method="get">
-        Cat image URL: <input id="url" type="text" name="url" value="" />
-        <button type="submit" onclick="validateUrl();">Make it metal</button>
-      </form>
-      or...
-      <form id="make_it_metal" action="/" method="get">
-        <button type="submit" onclick="validateUrl();">Random</button>
+        Song: <input type="text" name="song" value={{ song }} />
+        Artist: <input type="text" name="artist" value={{ artist }} />
+        {% if url %}
+        Cat URL: <input type="text" name="url" value={{ url }} />
+        {% else %}
+        Cat URL: <input type="text" name="url" />
+        {% endif %}
+        <button type="submit">Make it metal</button>
       </form>
     </div>
-  	<img src={{ img_src }} height="80%" />
+
+  	<img src={{ img_src }} height="80%" /><br />
+
+    <div class="button-container">
+      <form id="save" action="/" method="get">
+        <input type="hidden" name="song" value={{ song }} />
+        <input type="hidden" name="artist" value={{ artist }} />
+        {% if url %}
+        <input type="hidden" name="url" value={{ url }} />
+        {% endif %}
+        <input type="hidden" name="image_to_save" value={{ img_src }} />
+        <button type="submit">Save to favorites</button>
+      </form>
+      <a href="/favorites">View favorites</a>
+    </div>
   </body>
 </html>

@@ -13,17 +13,22 @@ class MetrolyricsSpider(Spider):
     logging.getLogger('scrapy').setLevel(logging.WARNING)
     logging.getLogger('scrapy').propagate = False
 
+    def __init__(self, song='dopesmoker', artist='sleep', *args, **kwargs):
+        super(MetrolyricsSpider, self).__init__(*args, **kwargs)
+        self.song = song
+        self.artist = artist
+
     def start_requests(self):
-        song = getattr(self, 'song', 'dopesmoker')
-        artist = getattr(self, 'artist', 'sleep')
-        url = 'http://www.metrolyrics.com/'+song+'-lyrics-'+artist+'.html'
+        url = 'http://www.metrolyrics.com/'+self.song+'-lyrics-'+self.artist+'.html'
         yield Request(url, self.parse)
 
     def parse(self, response):
         verses = response.xpath('//div[@id="lyrics-body-text"]/p[@class="verse"]')
-        items = []
+        lyrics = []
         for verse in verses:
-            item = MetrolyricsItem()
-            item['lines'] = verse.xpath('text()').extract()
-            items.append(item)
-        return items
+            lyrics.append(verse.xpath('text()').extract())
+        metrolyrics_song = MetrolyricsItem()
+        metrolyrics_song['song'] = self.song
+        metrolyrics_song['artist'] = self.artist
+        metrolyrics_song['lyrics'] = lyrics
+        return metrolyrics_song
