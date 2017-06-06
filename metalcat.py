@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-from common.imagemaker import get_image, get_overlay_text, draw_text_on_image
+from common.imagemaker import get_image, get_overlay_text, draw_text_on_image, song_lyrics_exist
 from metalcat.runner import run_spider
 
 SCRAPED_ITEMS_FILE = 'output/lyrics.json'
@@ -9,7 +9,7 @@ DEFAULT_SONG = 'dopesmoker'
 DEFAULT_ARTIST = 'sleep'
 
 def crawl(song, artist): 
-    run_spider(song=song, artist=artist, feed_uri=SCRAPED_ITEMS_FILE)
+    return run_spider(song=song, artist=artist, feed_uri=SCRAPED_ITEMS_FILE)
 
 def main():
     cat_logo = """     
@@ -41,10 +41,11 @@ def main():
                         help='The url of the image to draw lyrics on',
                         required=False)
     args = parser.parse_args()
-    crawl(args.song, args.artist)
+    if not song_lyrics_exist(args.song, args.artist):
+        crawl(args.song, args.artist)
     image = get_image(args.url, args.image)
     lyrics = get_overlay_text(args.song, args.artist)
-    image_with_lyrics = draw_text_on_image(image, lyrics)    
+    image_with_lyrics = draw_text_on_image(image, lyrics)
 
 if __name__ == "__main__":
     logging.getLogger('PIL').setLevel(logging.WARNING)

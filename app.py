@@ -2,7 +2,7 @@ import json
 
 from flask import Flask, render_template, request
 
-from common.imagemaker import get_image, get_overlay_text, draw_text_on_image, get_cat_images, delete_images, archive_image
+from common.imagemaker import get_image, get_overlay_text, draw_text_on_image, get_cat_images, delete_images, archive_image, song_lyrics_exist
 from metalcat.runner import run_spider
 
 SCRAPED_ITEMS_FILE = 'output/lyrics.json'
@@ -42,7 +42,8 @@ def main():
             url=url,
             img_src=saved_image
         )
-    crawl(song, artist)
+    if not song_lyrics_exist(song, artist):
+        crawl(song, artist)
     image = get_image(image_url=url)
     lyrics = get_overlay_text(song, artist)
     delete_images(METAL_CAT_DIR)

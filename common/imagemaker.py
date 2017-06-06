@@ -17,6 +17,7 @@ NORMAL_CAT_DIR = 'static/normalcats/'
 NORMAL_CATS_FILE = 'static/normalcats.json'
 METAL_CAT_ARCHIVE = 'static/metalcats/archive/'
 DEFAULT_IMAGE_URL = 'http://i.imgur.com/aeweLdr.jpg'
+FONT_TYPE = 'static/Impact.ttf'
 
 def get_image(image_url="", image_file_path=""):
     if image_url:
@@ -25,12 +26,15 @@ def get_image(image_url="", image_file_path=""):
     elif image_file_path:
         return image_file_path
     else:
-        response = requests.get(select_random_image_url())
+        url = select_random_image_url()
+        response = requests.get(url)
         return BytesIO(response.content)
 
 def get_overlay_text(song, artist):
-    overlay_text = ['=^..^=', '']
+    overlay_text = [' ', 'meow meow meow meow']
     lyrics = get_lyrics(song, artist)
+    if not lyrics:
+        return overlay_text
     verse = random.choice(lyrics)
     if len(verse) >= 2:
         first_line = random.choice(verse)
@@ -96,15 +100,28 @@ def get_fitted_font(image_width, overlay_text):
     fontsize = 1
     image_fraction = 0.90 # portion of the image width that the text will cover
     # iterate until the text size is just larger than the criteria
-    font = ImageFont.truetype("static/Impact.ttf", fontsize)
+    font = ImageFont.truetype(FONT_TYPE, fontsize)
     while font.getsize(overlay_text)[0] < image_fraction*image_width:
         fontsize += 1
-        font = ImageFont.truetype("static/Impact.ttf", fontsize)
+        font = ImageFont.truetype(FONT_TYPE, fontsize)
     # Decrement to be sure it is less than criteria
     fontsize -= 1
-    return ImageFont.truetype("static/Impact.ttf", fontsize)
+    return ImageFont.truetype(FONT_TYPE, fontsize)
+
+def song_lyrics_exist(song, artist):
+    if not os.path.isfile(SCRAPED_ITEMS_FILE):
+        return 0
+
+    with open(SCRAPED_ITEMS_FILE) as json_file:
+        for line in json_file:
+            item = json.loads(line)
+            if item['song'] == song and item['artist'] == artist:
+                return 1
+    return 0
 
 def get_lyrics(song, artist):
+    if not os.path.isfile(SCRAPED_ITEMS_FILE):
+        return []
     with open(SCRAPED_ITEMS_FILE) as json_file:
         for line in json_file:
             item = json.loads(line)

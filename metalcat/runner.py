@@ -37,8 +37,6 @@ def item_exists(song, artist, feed_uri):
     return 0
 
 def run_spider(song, artist, feed_uri):
-    if item_exists(song, artist, feed_uri):
-        return
     spider = MetrolyricsSpider(song, artist)
     spider_runner = SpiderRunner(spider, song, artist, feed_uri)
     spider_runner.start()
