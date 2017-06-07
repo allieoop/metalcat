@@ -35,16 +35,26 @@ def get_overlay_text(song, artist):
     lyrics = get_lyrics(song, artist)
     if not lyrics:
         return overlay_text
+
     verse = random.choice(lyrics)
+    if len(verse) < 2:
+        # try a second time
+        verse = random.choice(lyrics)
+
+        # try a third time, but by going through all lyrics
+        if len(verse) < 2:
+            for v in lyrics:
+                if len(v) >= 2:
+                    verse = v
+
     if len(verse) >= 2:
         first_line = random.choice(verse)
         second_line_index = verse.index(first_line)+1
         if second_line_index < len(verse):
-            overlay_text[0] = first_line
-            overlay_text[1] = verse[second_line_index]
+            overlay_text = [first_line, verse[second_line_index]]
         else:
-            overlay_text[0] = verse[0]
-            overlay_text[1] = verse[1]
+            overlay_text = [verse[0], verse[1]]
+
     return overlay_text
 
 def delete_images(images_dir):
