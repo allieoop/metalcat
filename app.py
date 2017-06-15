@@ -6,8 +6,8 @@ from common.imagemaker import get_image, get_overlay_text, draw_text_on_image, g
 from metalcat.runner import run_spider
 
 SCRAPED_ITEMS_FILE = 'output/lyrics.json'
-DEFAULT_SONG = 'dopesmoker'
-DEFAULT_ARTIST = 'sleep'
+DEFAULT_SONG = 'dantes-inferno'
+DEFAULT_ARTIST = 'iced-earth'
 METAL_CAT_DIR = 'static/metalcats/'
 METAL_CAT_ARCHIVE = 'static/metalcats/archive/'
 
