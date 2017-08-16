@@ -60,18 +60,18 @@ $ heroku open
 
 ## Metrolyrics spider
 
-The spider will automatically run when you refresh the page or run the metalcat.py script unless lyrics for the specified song already exist in `output/lyrics.json`. You can change which Metrolyrics page the spider scrapes by specifying the song and artist in the url parameters, e.g. http://localhost:5000/?song=dantes-inferno&artist=iced-earth. 
+The spider will automatically run when you refresh the page or run the metalcat.py script unless lyrics for the specified song already exist in `output/lyrics.jl`. You can change which Metrolyrics page the spider scrapes by specifying the song and artist in the url parameters, e.g. http://localhost:5000/?song=countdown-to-extinction&artist=megadeath. 
 
 If you want to run the spider manually:
 
 ```
-$ scrapy crawl metrolyrics_spider -a song=dantes-inferno -a artist=iced-earth -o output/lyrics.json
+$ scrapy crawl metrolyrics_spider -a song=countdown-to-extinction -a artist=megadeath -o output/lyrics.jl
 ```
 
 Or, with heroku:
 
 ```
-$ heroku run scrapy crawl metrolyrics_spider -a song=dantes-inferno -a artist=iced-earth -o output/lyrics.json
+$ heroku run scrapy crawl metrolyrics_spider -a song=countdown-to-extinction-a artist=megadeath -o output/lyrics.jl
 ```
 
 ## Example

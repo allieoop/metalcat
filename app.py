@@ -5,9 +5,9 @@ from flask import Flask, render_template, request
 from common.imagemaker import get_image, get_overlay_text, draw_text_on_image, get_cat_images, delete_images, archive_image, song_lyrics_exist
 from metalcat.runner import run_spider
 
-SCRAPED_ITEMS_FILE = 'output/lyrics.json'
-DEFAULT_SONG = 'dantes-inferno'
-DEFAULT_ARTIST = 'iced-earth'
+SCRAPED_ITEMS_FILE = 'output/lyrics.jl'
+DEFAULT_SONG = 'countdown-to-extinction'
+DEFAULT_ARTIST = 'megadeth'
 METAL_CAT_DIR = 'static/metalcats/'
 METAL_CAT_ARCHIVE = 'static/metalcats/archive/'
 

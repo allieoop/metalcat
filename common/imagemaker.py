@@ -12,7 +12,7 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
-SCRAPED_ITEMS_FILE = 'output/lyrics.json'
+SCRAPED_ITEMS_FILE = 'output/lyrics.jl'
 NORMAL_CAT_DIR = 'static/normalcats/'
 NORMAL_CATS_FILE = 'static/normalcats.json'
 METAL_CAT_ARCHIVE = 'static/metalcats/archive/'
