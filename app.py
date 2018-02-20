@@ -6,8 +6,8 @@ from common.imagemaker import get_image, get_overlay_text, draw_text_on_image, g
 from metalcat.runner import run_spider
 
 SCRAPED_ITEMS_FILE = 'output/lyrics.jl'
-DEFAULT_SONG = 'countdown-to-extinction'
-DEFAULT_ARTIST = 'megadeth'
+DEFAULT_SONG = 'space-time'
+DEFAULT_ARTIST = 'gojira'
 METAL_CAT_DIR = 'static/metalcats/'
 METAL_CAT_ARCHIVE = 'static/metalcats/archive/'
 

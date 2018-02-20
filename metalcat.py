@@ -5,8 +5,8 @@ from common.imagemaker import get_image, get_overlay_text, draw_text_on_image, s
 from metalcat.runner import run_spider
 
 SCRAPED_ITEMS_FILE = 'output/lyrics.jl'
-DEFAULT_SONG = 'countdown-to-extinction'
-DEFAULT_ARTIST = 'megadeth'
+DEFAULT_SONG = 'space-time'
+DEFAULT_ARTIST = 'gojira'
 
 def crawl(song, artist): 
     return run_spider(song=song, artist=artist, feed_uri=SCRAPED_ITEMS_FILE)

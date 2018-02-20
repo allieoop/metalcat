@@ -13,7 +13,7 @@ class MetrolyricsSpider(Spider):
     logging.getLogger('scrapy').setLevel(logging.WARNING)
     logging.getLogger('scrapy').propagate = False
 
-    def __init__(self, song='countdown-to-extinction', artist='megadeth', *args, **kwargs):
+    def __init__(self, song='space-time', artist='gojira', *args, **kwargs):
         super(MetrolyricsSpider, self).__init__(*args, **kwargs)
         self.song = song
         self.artist = artist
